@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { CircularProgress } from 'material-ui/Progress'
+import PollerIcon from "../icons/PollerIcon"
 import PollerObject from './PollerObject'
 import {connect} from "react-redux"
 import {getPollers} from "../../webservices/pollerApi"
@@ -13,8 +13,26 @@ class PollerObjectContainer extends Component {
     }
   }
 
-  componentDidMount = () =>  {
+  componentDidMount() {
     this.props.getPollers()
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.poller !== nextProps.poller) {
+      clearTimeout(this.timeout);
+
+      if (!nextProps.poller.isFetching) {
+        this.refresh();
+      }
+    }
+  }
+
+  refresh = () => {
+    this.timeout = setTimeout(() => this.props.getPollers(), this.props.poller.refreshTime)
   }
 
   handleOpen = event => {
@@ -26,7 +44,6 @@ class PollerObjectContainer extends Component {
   }
 
   setPollerState = (database, latency, stability) => {
-
     const pollerState = {
       color: '#88B917',
       className: '',
@@ -46,27 +63,37 @@ class PollerObjectContainer extends Component {
   render = () => {
     const { anchorEl } = this.state
     const open = !!anchorEl
-    const { database, latency, stability, total, dataFetched } = this.props.poller
+    const { database, latency, stability, total, dataFetched, error } = this.props.poller
 
-    if (dataFetched) {
-      const {color, className } = this.setPollerState(stability, database, latency)
-      return (
-        <PollerObject
-          handleClose={this.handleClose}
-          handleOpen={this.handleOpen}
-          open={open}
-          anchorEl={anchorEl}
-          iconColor={color}
-          className={className}
-          database={database}
-          latency={latency}
-          stability={stability}
-          total={total}
-        />
-      )
-    } else {
-      return <CircularProgress size={30} style={{ color: '#D1D2D4' }}/>
-    }
+    if (!error || error === null) {
+      if (dataFetched) {
+        const {color, className} = this.setPollerState(stability, database, latency)
+        return (
+          <PollerObject
+            handleClose={this.handleClose}
+            handleOpen={this.handleOpen}
+            open={open}
+            anchorEl={anchorEl}
+            iconColor={color ? color : '#88b917'}
+            className={className ? className : ''}
+            database={database ? database : {critical: '...', warning: '...'}}
+            latency={latency ? latency : {critical: '...', warning: '...'}}
+            stability={stability ? stability : {critical: '...', warning: '...'}}
+            total={total ? total : '...'}
+          />
+        )
+      } else {
+          return (
+            <PollerIcon
+              id='pollerIcon'
+              alt="poller icon"
+              style={{width: 34,height: 34}}
+              viewBox="6 156 600 600"
+              nativeColor='#BCBDC0'
+            />
+          )
+        }
+      } else return null
   }
 }
 

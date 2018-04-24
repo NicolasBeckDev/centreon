@@ -18,6 +18,6 @@ export function requestPollersSuccess (res) {
 export function requestPollersFail (err) {
   return {
     type: REQUEST_POLLERS_FAIL,
-    error: err,
+    error: err.response,
   }
 }

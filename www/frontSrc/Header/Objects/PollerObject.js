@@ -10,6 +10,9 @@ const styles = theme => ({
   root: {
     position: 'relative',
     fontFamily: theme.font.openSans,
+    display: 'inline-flex',
+    verticalAlign: 'middle',
+    margin: '6px',
   },
   'a': {
     color: '#0072CE',
@@ -50,9 +53,6 @@ const styles = theme => ({
   icon: {
     width: 34,
     height: 34,
-    display: 'inline-flex',
-    verticalAlign: 'middle',
-    margin: '6px',
     cursor: 'pointer',
   },
   paper: {
@@ -102,6 +102,7 @@ const PollerObject = (
   }) => (
   <div className={classes.root}>
     <PollerIcon
+      id='pollerIcon'
       alt="poller icon"
       aria-haspopup="true"
       onClick={handleOpen}
@@ -110,6 +111,7 @@ const PollerObject = (
       nativeColor={iconColor}
     />
     <Popover
+      id='pollerPopover'
       open={open}
       anchorEl={anchorEl}
       anchorReference='anchorEl'

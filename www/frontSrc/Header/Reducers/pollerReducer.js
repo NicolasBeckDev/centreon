@@ -4,12 +4,20 @@ import {
   REQUEST_POLLERS_FAIL,
 } from '../Actions/pollerActions'
 
-export default function pollerReducer (state = {},action) {
+export default function pollerReducer (
+  state = {
+    dataFetched: false,
+    isFetching: false,
+    error: null,
+    refreshTime: 30000
+  },action
+) {
   switch (action.type) {
     case REQUEST_POLLERS:
       return {
         ...state,
         dataFetched: false,
+        isFetching: true,
       }
     case REQUEST_POLLERS_SUCCESS:
       return {
@@ -49,6 +57,18 @@ export default function pollerReducer (state = {},action) {
           },
         },
         dataFetched: true,
+        isFetching: false,
+        error: false,
+        refreshTime: action.data.refreshTime * 1000,
+      }
+    case REQUEST_POLLERS_FAIL:
+      return {
+        ...state,
+        isFetching: false,
+        dataFetched: false,
+        status: action.error.status,
+        statusText: action.error.statusText,
+        error: true,
       }
     default:
       return state
