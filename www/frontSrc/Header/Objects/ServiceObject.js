@@ -54,6 +54,9 @@ const styles = theme => ({
       fontSize: 16
     },
     backgroundColor: theme.palette.warning.main,
+    '&:hover': {
+      backgroundColor: theme.palette.warning.light,
+    },
   },
   unknownStatus: {
     margin: '10px 4px',
@@ -65,6 +68,9 @@ const styles = theme => ({
       fontWeight: '600'
     },
     backgroundColor: theme.palette.unknown.main,
+    '&:hover': {
+      backgroundColor: theme.palette.unknown.dark,
+    },
   },
   chip: {
     height: '8px',
@@ -115,15 +121,15 @@ const ServiceObject = ({
         aria-haspopup="true"
         onClick={handleOpen}
       />
-      <Button variant="fab"
+      <Button variant="fab" href={critical.url}
               className={(classes.status, classes.errorStatus)}>
         {numeral(critical.unhandled).format('0a')}
       </Button>
-      <Button variant="fab" mini
+      <Button variant="fab" mini  href={warning.url}
               className={( classes.status, classes.warningStatus)}>
         {numeral(warning.unhandled).format('0a')}
       </Button>
-      <Button variant="fab" mini color="primary"
+      <Button variant="fab" mini color="primary"  href={unknown.url}
               className={(classes.status, classes.unknownStatus)}>
         {numeral(unknown.unhandled).format('0a')}
       </Button>

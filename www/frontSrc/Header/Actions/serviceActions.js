@@ -18,6 +18,6 @@ export function requestServicesSuccess (res) {
 export function requestServicesFail (err) {
   return {
     type: REQUEST_SERVICES_FAIL,
-    error: err,
+    error: err.response,
   }
 }

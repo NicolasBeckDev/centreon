@@ -15,6 +15,24 @@ class ServiceObjectContainer extends Component {
     this.props.getServices()
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.service !== nextProps.service) {
+      clearTimeout(this.timeout);
+
+      if (!nextProps.service.isFetching) {
+        this.refresh();
+      }
+    }
+  }
+
+  refresh = () => {
+    this.timeout = setTimeout(() => this.props.getServices(), this.props.service.refreshTime)
+  }
+
   handleOpen = event => {
     this.setState({ anchorEl: event.currentTarget })
   }
@@ -24,9 +42,11 @@ class ServiceObjectContainer extends Component {
   }
 
   render = () => {
-    const {service} = this.props
+    const {service, dataFetched, error} = this.props
     const { anchorEl } = this.state
     const open = !!anchorEl
+
+    if (dataFetched || !error) {
     return (
       <ServiceObject
         handleClose={this.handleClose}
@@ -34,15 +54,30 @@ class ServiceObjectContainer extends Component {
         open={open}
         anchorEl={anchorEl}
         object='service'
-        critical={service.critical ? service.critical : 0}
-        warning={service.warning ? service.warning : 0}
-        unknown={service.unknown ? service.unknown : 0}
-        ok={service.ok ? service.ok : 0}
+        critical={service.critical ? service.critical : '...'}
+        warning={service.warning ? service.warning : '...'}
+        unknown={service.unknown ? service.unknown : '...'}
+        ok={service.ok ? service.ok : '...'}
         pending={service.pending ? service.pending : false}
         total={service.total}
         url={service.url}
         key='service'/>
     )
+  } else {
+      return (
+        <ServiceObject
+          anchorEl={anchorEl}
+          object='service'
+          critical='...'
+          warning='...'
+          unknown='...'
+          ok='...'
+          pending='...'
+          total='...'
+          url='...'
+          key='service'/>
+      )
+    }
   }
 }
 

@@ -4,11 +4,19 @@ import {
   REQUEST_SERVICES_FAIL,
 } from '../Actions/serviceActions'
 
-export default function serviceReducer (state = {}, action) {
+export default function serviceReducer (
+  state = {
+    dataFetched: false,
+    isFetching: false,
+    error: null,
+    refreshTime: 30000
+  }, action) {
   switch (action.type) {
     case REQUEST_SERVICES:
       return {
-        ...state
+        ...state,
+        dataFetched: false,
+        isFetching: true,
       }
     case REQUEST_SERVICES_SUCCESS:
       return {
@@ -40,6 +48,19 @@ export default function serviceReducer (state = {}, action) {
           classe: 'pending',
           url: './main.php?p=20201&o=svc_pending&search='
         },
+        dataFetched: true,
+        isFetching: false,
+        error: false,
+        refreshTime: action.data.refreshTime * 1000,
+      }
+    case REQUEST_SERVICES_FAIL:
+      return {
+        ...state,
+        isFetching: false,
+        dataFetched: false,
+        status: action.error.status,
+        statusText: action.error.statusText,
+        error: true,
       }
     default:
       return state
