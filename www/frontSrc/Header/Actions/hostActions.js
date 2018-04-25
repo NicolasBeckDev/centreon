@@ -18,6 +18,6 @@ export function requestHostsSuccess (res) {
 export function requestHostsFail (err) {
   return {
     type: REQUEST_HOSTS_FAIL,
-    error: err,
+    error: err.response,
   }
 }

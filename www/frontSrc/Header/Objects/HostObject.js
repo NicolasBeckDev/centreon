@@ -50,6 +50,9 @@ const styles = theme => ({
       color: '#fff',
       fontWeight: '600'
     },
+    '&:hover': {
+      backgroundColor: theme.palette.error.light,
+    },
   },
   unreachableStatus: {
     margin: '10px 4px',
@@ -61,6 +64,9 @@ const styles = theme => ({
       fontWeight: '600'
     },
     backgroundColor: theme.palette.unreachable.main,
+    '&:hover': {
+      backgroundColor: theme.palette.unreachable.light,
+    },
   },
   chip: {
     height: '8px',
@@ -122,13 +128,12 @@ const HostObject = (
     />
     {pending.total > 0 ?
       <span className={classes.pendingStatus} ></span> : ''}
-    <a href={down.url}>
-      <Button variant="fab"
+
+      <Button variant="fab" href={down.url}
               className={(classes.status, classes.errorStatus)}>
         {numeral(down.unhandled).format('0a')}
       </Button>
-    </a>
-    <Button variant="fab" mini
+    <Button variant="fab" mini href={unreachable.url}
             className={( classes.status, classes.unreachableStatus)}>
       {numeral(unreachable.unhandled).format('0a')}
     </Button>

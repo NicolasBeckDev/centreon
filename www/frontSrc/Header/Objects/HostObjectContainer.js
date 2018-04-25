@@ -15,6 +15,24 @@ class HostObjectContainer extends Component {
     this.props.getHosts()
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.host !== nextProps.host) {
+      clearTimeout(this.timeout);
+
+      if (!nextProps.host.isFetching) {
+        this.refresh();
+      }
+    }
+  }
+
+  refresh = () => {
+    this.timeout = setTimeout(() => this.props.getHosts(), this.props.host.refreshTime)
+  }
+
   handleOpen = event => {
     this.setState({ anchorEl: event.currentTarget })
   }
@@ -25,24 +43,39 @@ class HostObjectContainer extends Component {
 
 
   render = () => {
-    const {host} = this.props
+    const {host, dataFetched, error} = this.props
     const { anchorEl } = this.state
     const open = !!anchorEl
-    return (
-      <HostObject
-        handleClose={this.handleClose}
-        handleOpen={this.handleOpen}
-        open={open}
-        anchorEl={anchorEl}
-        object='host'
-        down={host.down ? host.down : 0}
-        unreachable={host.unreachable ? host.unreachable : 0}
-        ok={host.ok ? host.ok : 0}
-        pending={host.pending ? host.pending : 0}
-        total={host.total}
-        url={host.url}
-        key='host'/>
-    )
+
+      if (dataFetched || !error) {
+        return (
+          <HostObject
+            handleClose={this.handleClose}
+            handleOpen={this.handleOpen}
+            open={open}
+            anchorEl={anchorEl}
+            object='host'
+            down={host.down ? host.down : '...'}
+            unreachable={host.unreachable ? host.unreachable : '...'}
+            ok={host.ok ? host.ok : '...'}
+            pending={host.pending ? host.pending : '...'}
+            total={host.total}
+            url={host.url}
+            key='host'/>
+        )
+      } else {
+        return (
+          <HostObject
+            object='host'
+            down='...'
+            unreachable='...'
+            ok='...'
+            pending='...'
+            total='...'
+            url='...'
+            key='host'/>
+        )
+      }
   }
 }
 
