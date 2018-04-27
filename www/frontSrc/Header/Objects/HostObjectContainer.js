@@ -43,39 +43,43 @@ class HostObjectContainer extends Component {
 
 
   render = () => {
-    const {host, dataFetched, error} = this.props
+    const {total, url, ok, pending, down, unreachable, dataFetched, error} = this.props.host
     const { anchorEl } = this.state
     const open = !!anchorEl
 
-      if (dataFetched || !error) {
+    if (dataFetched) {
+      return (
+        <HostObject
+          handleClose={this.handleClose}
+          handleOpen={this.handleOpen}
+          open={open}
+          anchorEl={anchorEl}
+          object='host'
+          down={down}
+          unreachable={unreachable}
+          ok={ok}
+          pending={pending}
+          total={total}
+          url={url}
+          key='host'
+        />
+      )
+    } else {
+      if (error === false && error != null) {
         return (
           <HostObject
-            handleClose={this.handleClose}
-            handleOpen={this.handleOpen}
-            open={open}
-            anchorEl={anchorEl}
-            object='host'
-            down={host.down ? host.down : '...'}
-            unreachable={host.unreachable ? host.unreachable : '...'}
-            ok={host.ok ? host.ok : '...'}
-            pending={host.pending ? host.pending : '...'}
-            total={host.total}
-            url={host.url}
-            key='host'/>
-        )
-      } else {
-        return (
-          <HostObject
+            open={false}
             object='host'
             down='...'
             unreachable='...'
             ok='...'
             pending='...'
-            total='...'
-            url='...'
+            total='0'
+            url=''
             key='host'/>
-        )
-      }
+          )
+      } else return null
+    }
   }
 }
 
