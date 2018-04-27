@@ -127,12 +127,14 @@ const HostObject = (
       onClick={handleOpen}
     />
     {pending.total > 0 ?
-      <span className={classes.pendingStatus} ></span> : ''}
+      <span className={classes.pendingStatus} ></span>
+      : ''
+    }
 
-      <Button variant="fab" href={down.url}
-              className={(classes.status, classes.errorStatus)}>
-        {numeral(down.unhandled).format('0a')}
-      </Button>
+    <Button variant="fab" href={down.url}
+            className={(classes.status, classes.errorStatus)}>
+      {numeral(down.unhandled).format('0a')}
+    </Button>
     <Button variant="fab" mini href={unreachable.url}
             className={( classes.status, classes.unreachableStatus)}>
       {numeral(unreachable.unhandled).format('0a')}
